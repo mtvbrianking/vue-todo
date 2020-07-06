@@ -1,11 +1,11 @@
 import './firebase'
 import Vue from 'vue'
+import { firestorePlugin } from 'vuefire'
 import App from './App.vue'
-import VueFire from 'vuefire'
 
 Vue.config.productionTip = false
 
-Vue.use(VueFire);
+Vue.use(firestorePlugin);
 
 new Vue({
   render: h => h(App),
