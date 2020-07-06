@@ -1,4 +1,9 @@
-# todo
+# Vue todo app.
+
+## Configure Firebase
+```
+cp src/firebase.js.dist src/firebase.js
+```
 
 ## Project setup
 ```

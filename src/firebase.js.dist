@@ -1,0 +1,17 @@
+import { initializeApp } from 'firebase';
+
+var firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    databaseURL: "YOUR_DB_URL",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
+};
+
+const firebase = initializeApp(firebaseConfig);
+
+export const db = firebase.firestore();
+
+export const todosCollection = db.collection('todos');
