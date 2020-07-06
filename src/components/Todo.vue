@@ -12,18 +12,37 @@
       <ul class="todo-list">
         <li v-for="todo in todos" :key="todo.id" class="todo-item">
           <label v-if="currentlyEditing !== todo.id" class="todo-item-label">
-          <input
-            type="checkbox"
-            v-model="todo.is_completed"
-            @change="updateTodo(todo)"
-            class="todo-item__checkbox">
+            <input 
+              type="checkbox" 
+              v-model="todo.completed" 
+              @change="updateTodo(todo)"
+              class="todo-item__checkbox">
               {{todo.title}}
           </label>
-          <button
-            @click="deleteTodo(todo)"
-            class="todo-button">
-            <img src="../assets/trash.svg" alt="Delete todo">
-          </button>
+          <div v-if="currentlyEditing !== todo.id">
+            <button
+              @click="editTodo(todo)" 
+              class="todo-button">
+              <img src="../assets/pencil.svg" alt="Edit todo">
+            </button>
+            <button
+              @click="deleteTodo(todo)" 
+              class="todo-button">
+              <img src="../assets/trash.svg" alt="Delete todo">
+            </button>
+          </div>
+          <form v-else class="edit-todo-form">
+            <label class="edit-todo-label">
+              Edit:
+              <input type="text" v-model="todoEditTitle" class="edit-todo-input" required>
+            </label>
+            <button 
+              type="submit" 
+              class="edit-todo-button"
+              @click.prevent="updateTodoTitle()">
+              Save
+            </button>
+          </form>
         </li>
       </ul>
     </section>
@@ -38,7 +57,9 @@
     data () {
       return {
         title: '',
-        todos: []
+        todos: [],
+        currentlyEditing: null,
+        todoEditTitle: ''
       }
     },
     firestore() {
@@ -60,6 +81,23 @@
           console.error("Error adding document: ", error);
         });
         this.title = '';
+      },
+      editTodo(todo) {
+        this.currentlyEditing = todo.id
+        this.todoEditTitle = todo.title
+      },
+      updateTodoTitle() {
+        todosCollection.doc(this.currentlyEditing).update({
+          title: this.todoEditTitle
+        })
+        .then(function(docRef) {
+          console.log("Updated document title with ID: ", docRef.id);
+        })
+        .catch(function(error) {
+          console.error("Error updating document title: ", error);
+        });
+        this.currentlyEditing = null;
+        this.todoEditTitle = '';
       },
       updateTodo(todo) {
         todosCollection.doc(todo.id).update({...todo})
